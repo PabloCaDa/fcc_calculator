@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import './Content.scss'
+import Displays from './Displays/Displays'
+import Controls from './Controls/Controls'
 
 const contentStyle = {
-    backgroundColor: 'var(--main-title-text-color)',
-    color: 'var(--main-text-color)',
+    backgroundColor: '#dbdbdb',
     minHeight:'80vh',
     display: 'flex',
     justifyContent: 'center',
@@ -18,9 +19,8 @@ const initialState = {
     lastClicked: '',
 }
 
-const isOperator = /[x/+‑]/
-const endsWithOperator = /[x+‑/]$/
-
+const isOperator = /[x/+-]/
+const endsWithOperator = /[x+-/]$/
 
 export default class Calculator extends Component {
     state = initialState;
@@ -54,7 +54,7 @@ export default class Calculator extends Component {
         if (!this.state.currentVal.includes('Limit')) {
             this.setState({ currentVal: value, evaluated: false });
             if (this.state.formula.includes('=')) {
-              this.setState({ formula: this.state.prevVal + value }); // comment 1
+              this.setState({ formula: this.state.prevVal + value });
             } else {
               this.setState({
                 prevVal: !isOperator.test(this.state.currentVal) ?
@@ -124,35 +124,14 @@ export default class Calculator extends Component {
         return (
             <div id="content" style={contentStyle} >
                 <div id="calculator">
-                    <div className="row__display">
-                        <div id="formulaDisplay">{formula}</div>
-                        <div id="display">{currentVal}</div>
-                    </div>
-                    <div className="row">
-                        <div id="clear" className="btn__double_hor btn__clear" onClick={this.initialize}>AC</div>
-                        <div id="divide" className="btn__single btn__operation" onClick={this.handleOperations}>/</div>
-                        <div id="multiply" className="btn__single btn__operation" onClick={this.handleOperations}>x</div>
-                    </div>
-                    <div className="row">
-                        <div id="seven" className="btn__single btn__number" onClick={this.handleNumbers}>7</div>
-                        <div id="eight" className="btn__single btn__number" onClick={this.handleNumbers}>8</div>
-                        <div id="nine" className="btn__single btn__number" onClick={this.handleNumbers}>9</div>
-                        <div id="substract" className="btn__single btn__operation" onClick={this.handleOperations}>-</div>
-                    </div>
-                    <div className="row">
-                        <div id="four" className="btn__single btn__number" onClick={this.handleNumbers}>4</div>
-                        <div id="five" className="btn__single btn__number" onClick={this.handleNumbers}>5</div>
-                        <div id="six" className="btn__single btn__number" onClick={this.handleNumbers}>6</div>
-                        <div id="add" className="btn__single btn__operation" onClick={this.handleOperations}>+</div>
-                    </div>
-                    <div className="row__double">
-                        <div id="one" className="btn__single btn__number"onClick={this.handleNumbers}>1</div>
-                        <div id="two" className="btn__single btn__number" onClick={this.handleNumbers}>2</div>
-                        <div id="three" className="btn__single btn__number" onClick={this.handleNumbers}>3</div>
-                        <div id="equals" className="btn__double_ver btn__equals" onClick={this.handleEvaluate}>=</div>
-                        <div id="zero" className="btn__double_hor btn__number" onClick={this.handleNumbers}>0</div>
-                        <div id="decimal" className="btn__single btn__number" onClick={this.handleDecimal}>.</div>
-                    </div>
+                    <Displays formula={formula} display={currentVal}/>
+                    <Controls 
+                        initialize={this.initialize}
+                        handleOps={this.handleOperations}
+                        handleNums={this.handleNumbers}
+                        handleDec={this.handleDecimal}
+                        handleEva={this.handleEvaluate}
+                    />
                 </div>
             </div>
         )
